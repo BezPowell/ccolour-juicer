@@ -13,8 +13,17 @@ dependencies = [
 name = "ccolour-juicer"
 version = "0.1.0"
 dependencies = [
- "lazy_static",
+ "css-color-parser2",
  "regex",
+]
+
+[[package]]
+name = "css-color-parser2"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cf8ed1639f4b56ec6f31d007ff66ce4a13099dce5a9995d48368a30d62bf04bd"
+dependencies = [
+ "lazy_static",
 ]
 
 [[package]]

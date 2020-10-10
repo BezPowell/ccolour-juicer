@@ -4,6 +4,8 @@ use std::io::prelude::*;
 
 mod extract;
 use extract::extract_hex;
+mod duplicates;
+use duplicates::detect_duplicates;
 
 pub struct Config {
     pub input: String,
@@ -28,10 +30,11 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
 
-    let colours = extract_hex(&contents);
+    let matches = extract_hex(&contents);
+    let colours = detect_duplicates(&matches);
 
-    for line in colours {
-        println!("{}", line);
+    for colour in colours {
+        println!("{:?}", colour);
     }
 
     Ok(())
