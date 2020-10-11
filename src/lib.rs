@@ -3,9 +3,9 @@ use std::fs::File;
 use std::io::prelude::*;
 
 mod extract;
-use extract::extract_hex;
-mod duplicates;
-use duplicates::detect_duplicates;
+use extract::ColourExtract;
+mod colour;
+mod helpers;
 
 pub struct Config {
     pub input: String,
@@ -30,11 +30,26 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
 
-    let matches = extract_hex(&contents);
-    let colours = detect_duplicates(&matches);
+    let colours = ColourExtract::new(&contents).extract_hex().build();
 
+    // Print out
+    println!(
+        "{0: <20} | {1: <10} | {2: <10}",
+        "Colour", "Count", "Duplicate"
+    );
     for colour in colours {
-        println!("{:?}", colour);
+        let duplicate = if let Some(dup) = colour.duplicate() {
+            dup.clone()
+        } else {
+            "".to_string()
+        };
+
+        println!(
+            "{0: <20} | {1: <10} | {2: <10}",
+            colour.string(),
+            colour.count(),
+            duplicate
+        );
     }
 
     Ok(())
