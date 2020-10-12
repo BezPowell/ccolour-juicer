@@ -5,6 +5,7 @@ use std::io::prelude::*;
 mod extract;
 use extract::ColourExtract;
 mod colour;
+mod constants;
 mod helpers;
 
 pub struct Config {
@@ -30,7 +31,10 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
 
-    let colours = ColourExtract::new(&contents).extract_hex().build();
+    let colours = ColourExtract::new(&contents)
+        .extract_computed()
+        .extract_named()
+        .build();
 
     // Print out
     println!(

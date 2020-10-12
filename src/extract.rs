@@ -16,12 +16,28 @@ impl<'a> ColourExtract<'a> {
         }
     }
 
-    pub fn extract_hex(mut self) -> ColourExtract<'a> {
+    pub fn extract_computed(mut self) -> ColourExtract<'a> {
         // Setup regex string
-        let hex_match = Regex::new(r"\#(([0-9a-fA-F]{2}){3}|([0-9a-fA-F]{3}))").unwrap();
+        let computed_match = Regex::new(
+            r"(#(?:[0-9a-fA-F]{2}){3}|(#[0-9a-f]{3})|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))",
+        )
+        .unwrap();
 
         // Match colours
-        self.match_colours(hex_match);
+        self.match_colours(computed_match);
+
+        self
+    }
+
+    pub fn extract_named(mut self) -> ColourExtract<'a> {
+        // Setup regex string
+        let named_match = Regex::new(
+            r"(black|silver|gray|whitesmoke|maroon|red|purple|fuchsia|green|lime|olivedrab|yellow|navy|blue|teal|aquamarine|orange|aliceblue|antiquewhite|aqua|azure|beige|bisque|blanchedalmond|blueviolet|brown|burlywood|cadetblue|chartreuse|chocolate|coral|cornflowerblue|cornsilk|crimson|darkblue|darkcyan|darkgoldenrod|darkgray|darkgreen|darkgrey|darkkhaki|darkmagenta|darkolivegreen|darkorange|darkorchid|darkred|darksalmon|darkseagreen|darkslateblue|darkslategray|darkslategrey|darkturquoise|darkviolet|deeppink|deepskyblue|dimgray|dimgrey|dodgerblue|firebrick|floralwhite|forestgreen|gainsboro|ghostwhite|goldenrod|gold|greenyellow|grey|honeydew|hotpink|indianred|indigo|ivory|khaki|lavenderblush|lavender|lawngreen|lemonchiffon|lightblue|lightcoral|lightcyan|lightgoldenrodyellow|lightgray|lightgreen|lightgrey|lightpink|lightsalmon|lightseagreen|lightskyblue|lightslategray|lightslategrey|lightsteelblue|lightyellow|limegreen|linen|mediumaquamarine|mediumblue|mediumorchid|mediumpurple|mediumseagreen|mediumslateblue|mediumspringgreen|mediumturquoise|mediumvioletred|midnightblue|mintcream|mistyrose|moccasin|navajowhite|oldlace|olive|orangered|orchid|palegoldenrod|palegreen|paleturquoise|palevioletred|papayawhip|peachpuff|peru|pink|plum|powderblue|rosybrown|royalblue|saddlebrown|salmon|sandybrown|seagreen|seashell|sienna|skyblue|slateblue|slategray|slategrey|snow|springgreen|steelblue|tan|thistle|tomato|turquoise|violet|wheat|white|yellowgreen|rebeccapurple|cyan|magenta)\b",
+        )
+        .unwrap();
+
+        // Match colours
+        self.match_colours(named_match);
 
         self
     }
@@ -55,12 +71,23 @@ impl<'a> ColourExtract<'a> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::constants::*;
 
     #[test]
-    fn test_hex() {
-        let css = "color: #010101; background-color: rgb(255,255,255); border-color: #zvab00; outline-color: #777; color: #010101;";
-        let extract = ColourExtract::new(css).extract_hex();
-        assert!(extract.colours.contains_key("#010101") && extract.colours.contains_key("#777"));
-        assert_eq!(extract.colours.len(), 2);
+    fn test_computed() {
+        let extract = ColourExtract::new(COMPUTED_TEST).extract_computed();
+        assert_eq!(extract.colours.get("#ff0000").unwrap().count(), 1);
+        assert_eq!(extract.colours.get("rgb(255,0,0)").unwrap().count(), 2);
+        assert_eq!(
+            extract.colours.get("hsl(120, 100%, 50%)").unwrap().count(),
+            2
+        );
+        assert_eq!(extract.colours.len(), 13);
+    }
+
+    #[test]
+    fn test_named() {
+        let extract = ColourExtract::new(NAMED_TEST).extract_named();
+        assert_eq!(extract.colours.len(), 147);
     }
 }
