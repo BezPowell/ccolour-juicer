@@ -38,7 +38,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
     // Print out
     println!(
-        "{0: <20} | {1: <10} | {2: <10}",
+        "{0: <22} | {1: <10} | {2: <10}",
         "Colour", "Count", "Duplicate"
     );
     for colour in colours {
@@ -49,7 +49,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
         };
 
         println!(
-            "{0: <20} | {1: <10} | {2: <10}",
+            "{0: <22} | {1: <10} | {2: <10}",
             colour.string(),
             colour.count(),
             duplicate
