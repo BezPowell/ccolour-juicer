@@ -1,4 +1,4 @@
-use css_color_parser2::Color;
+use css_color_parser2::{Color, ColorParseError};
 #[derive(Debug, Clone)]
 pub struct ColourMatch {
     count: u32,
@@ -8,15 +8,15 @@ pub struct ColourMatch {
 }
 
 impl ColourMatch {
-    pub fn new(string: String) -> ColourMatch {
-        let colour = string.parse::<Color>().unwrap();
+    pub fn new(string: String) -> Result<ColourMatch, ColorParseError> {
+        let colour = string.parse::<Color>()?;
 
-        ColourMatch {
+        Ok(ColourMatch {
             count: 1,
             colour,
             string,
             duplicate: None,
-        }
+        })
     }
 
     pub fn string(&self) -> &String {

@@ -61,8 +61,13 @@ impl<'a> ColourExtract<'a> {
                 colour.increment();
             } else {
                 // Colour not already found, add to map
-                self.colours
-                    .insert(cap[0].to_string(), ColourMatch::new(cap[0].to_string()));
+                let col_string = cap[0].to_string();
+                match ColourMatch::new(cap[0].to_string()) {
+                    Ok(colour) => {
+                        self.colours.insert(col_string, colour);
+                    }
+                    Err(e) => eprintln!("Error parsing {}: {}", col_string, e),
+                }
             }
         }
     }
