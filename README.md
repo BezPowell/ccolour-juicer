@@ -3,8 +3,19 @@
 ---
 Simple cli utility to print out a list of unique colours in a given css file. Outputs each unique colour string organised by number of times it appears. Also indicates if, once computed, each colour is a duplicate of another (e.g. `white` would be listed as a duplicate of `#fff`).
 
-## Usage example
-`ccolour-juicer path/to/file.css`
+## Usage
+```
+ccolour-juicer path/to/file.css
+```
+
+ccolour-juicer also accepts a couple of cli flags:
+- `--csv` / `-C`: Output as csv instead of the pretty formatted default output.
+- `--skip-named` / `-S`: Skip checking for the presence of named colors (e.g. white, black etc.) as these are often much slower than computed color values.
+
+for example, to check `styles.css` while skipping named colors and outputting as csv to `cols.csv` you could use:
+```
+ccolour-juicer ./styles.css --skip-named --csv > cols.csv
+```
 
 ## Example output
 Running utility on `bootstrap.min.css` (current as of 2020-10-12) gives the following output
@@ -183,4 +194,3 @@ Requires `rust` and `cargo` to be installed. Just clone repository and run `carg
 
 ## Known limitations
 1. Only supports CSS 3 syntax due to `css-color-parser2` not having support for CSS Color Module Level 4.
-2. Currently panics on any invalid colour strings (e.g. `rgb(255,255,255,1)`) - proper error handling will be implemented at a later date.

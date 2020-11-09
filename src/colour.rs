@@ -1,5 +1,5 @@
 use css_color_parser2::{Color, ColorParseError};
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ColourMatch {
     count: u32,
     colour: Color,

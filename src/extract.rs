@@ -79,7 +79,7 @@ mod test {
     use crate::constants::*;
 
     #[test]
-    fn test_computed() {
+    fn extract_computed() {
         let extract = ColourExtract::new(COMPUTED_TEST).extract_computed();
         assert_eq!(extract.colours.get("#ff0000").unwrap().count(), 1);
         assert_eq!(extract.colours.get("rgb(255,0,0)").unwrap().count(), 2);
@@ -91,7 +91,7 @@ mod test {
     }
 
     #[test]
-    fn test_named() {
+    fn extract_named() {
         let extract = ColourExtract::new(NAMED_TEST).extract_named();
         assert_eq!(extract.colours.len(), 147);
     }
